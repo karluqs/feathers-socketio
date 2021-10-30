@@ -11,7 +11,7 @@ const methodTests = require('./methods.js');
 const eventTests = require('./events');
 const socketio = require('../lib');
 
-describe('@feathersjs/socketio', () => {
+describe('@karluqs/feathers-socketio', () => {
   let app;
   let server;
   let socket;
