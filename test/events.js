@@ -1,12 +1,12 @@
 const assert = require('assert');
 const io = require('socket.io-client');
-const { verify } = require('feathers-commons/lib/test/fixture');
+const { verify } = require('./fixture');
 
 module.exports = function (name, options) {
   const call = (method, ...args) => {
     return new Promise((resolve, reject) => {
       const { socket } = options;
-      const emitArgs = [method, name].concat(args);
+      const emitArgs = [ method, name ].concat(args);
 
       socket.emit(...emitArgs, (error, result) =>
         error ? reject(error) : resolve(result)
@@ -26,7 +26,8 @@ module.exports = function (name, options) {
   };
 
   describe('Basic service events', () => {
-    let socket, connection;
+    let socket;
+    let connection;
 
     before(done => {
       options.app.once('connection', conn => {
@@ -45,8 +46,8 @@ module.exports = function (name, options) {
     });
 
     it(`${name} created`, done => {
-      const original = {
-        name: 'created event'
+      let original = {
+        name: `created event`
       };
 
       socket.once(`${name} created`, verifyEvent(done, data =>
@@ -57,8 +58,8 @@ module.exports = function (name, options) {
     });
 
     it(`${name} updated`, done => {
-      const original = {
-        name: 'updated event'
+      let original = {
+        name: `updated event`
       };
 
       socket.once(`${name} updated`, verifyEvent(done, data =>
@@ -69,8 +70,8 @@ module.exports = function (name, options) {
     });
 
     it(`${name} patched`, done => {
-      const original = {
-        name: 'patched event'
+      let original = {
+        name: `patched event`
       };
 
       socket.once(`${name} patched`, verifyEvent(done, data =>
@@ -89,11 +90,11 @@ module.exports = function (name, options) {
     });
 
     it(`${name} custom events`, done => {
-      const service = options.app.service(name);
-      const original = {
-        name: 'created event'
+      let service = options.app.service(name);
+      let original = {
+        name: `created event`
       };
-      const old = service.create;
+      let old = service.create;
 
       service.create = function (data) {
         this.emit('log', { message: 'Custom log event', data });
@@ -103,7 +104,7 @@ module.exports = function (name, options) {
 
       socket.once(`${name} log`, verifyEvent(done, data => {
         assert.deepStrictEqual(data, {
-          message: 'Custom log event', data: original
+          message: `Custom log event`, data: original
         });
         service.create = old;
       }));
@@ -114,15 +115,12 @@ module.exports = function (name, options) {
 
   describe('Event channels', () => {
     const eventName = `${name} created`;
-    let connections, sockets;
+    let connections;
+    let sockets;
 
     before(done => {
       let counter = 0;
-
-      connections = [];
-      sockets = [];
-
-      options.app.on('connection', connection => {
+      const handler = connection => {
         counter++;
 
         options.app.channel(connection.channel).join(connection);
@@ -131,8 +129,14 @@ module.exports = function (name, options) {
 
         if (counter === 3) {
           done();
+          options.app.removeListener('connection', handler);
         }
-      });
+      };
+
+      connections = [];
+      sockets = [];
+
+      options.app.on('connection', handler);
 
       sockets.push(
         io('http://localhost:7886', {
@@ -149,22 +153,13 @@ module.exports = function (name, options) {
       );
     });
 
-    after(done => {
-      let counter = 0;
-
-      sockets.forEach(socket => {
-        socket.once('disconnect', () => {
-          if (++counter === sockets.length) {
-            done();
-          }
-        });
-        socket.close();
-      });
+    after(() => {
+      sockets.forEach(socket => socket.disconnect());
     });
 
     it(`filters '${eventName}' event for a single channel`, done => {
       const service = options.app.service(name);
-      const [socket, otherSocket] = sockets;
+      const [ socket, otherSocket ] = sockets;
       const onError = () => {
         done(new Error('Should not get this event'));
       };
@@ -191,7 +186,7 @@ module.exports = function (name, options) {
       let counter = 0;
 
       const service = options.app.service(name);
-      const [otherSocket, socketOne, socketTwo] = sockets;
+      const [ otherSocket, socketOne, socketTwo ] = sockets;
       const onError = () => {
         done(new Error('Should not get this event'));
       };

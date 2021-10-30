@@ -1,13 +1,12 @@
 const assert = require('assert');
-const { verify } = require('feathers-commons/lib/test/fixture');
+const { verify } = require('./fixture');
 
 module.exports = function (name, options, legacy = false) {
   const call = (method, ...args) =>
     new Promise((resolve, reject) => {
       const { socket } = options;
-      const prefix = legacy
-        ? [`${name}::${method}`]
-        : [method, name];
+      const prefix = legacy ? [ `${name}::${method}` ]
+        : [ method, name ];
       const emitArgs = prefix.concat(args);
 
       socket.emit(...emitArgs, (error, result) =>
@@ -16,7 +15,7 @@ module.exports = function (name, options, legacy = false) {
     }
     );
 
-  it('invalid arguments cause an error', () =>
+  it(`invalid arguments cause an error`, () =>
     call('find', 1, {}).catch(e =>
       assert.strictEqual(e.message, 'Too many arguments for \'find\' method')
     )
@@ -48,18 +47,18 @@ module.exports = function (name, options, legacy = false) {
       .catch(error => assert.strictEqual(error.message, 'Error from get, before hook'))
   );
 
-  it('.create', () => {
-    const original = {
-      name: 'creating'
+  it(`.create`, () => {
+    let original = {
+      name: `creating`
     };
 
     return call('create', original, {})
       .then(data => verify.create(original, data));
   });
 
-  it('.create without parameters', () => {
-    const original = {
-      name: 'creating again'
+  it(`.create without parameters`, () => {
+    let original = {
+      name: `creating again`
     };
 
     return call('create', original)
@@ -67,7 +66,7 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.update', () => {
-    const original = {
+    let original = {
       name: 'updating'
     };
 
@@ -77,7 +76,7 @@ module.exports = function (name, options, legacy = false) {
 
   it('.update many', () => {
     const original = {
-      name: 'updating',
+      name: `updating`,
       many: true
     };
 
@@ -86,8 +85,8 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.patch', () => {
-    const original = {
-      name: 'patching'
+    let original = {
+      name: `patching`
     };
 
     return call('patch', 25, original)
@@ -95,8 +94,8 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.patch many', () => {
-    const original = {
-      name: 'patching',
+    let original = {
+      name: `patching`,
       many: true
     };
 
