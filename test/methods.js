@@ -5,8 +5,9 @@ module.exports = function (name, options, legacy = false) {
   const call = (method, ...args) =>
     new Promise((resolve, reject) => {
       const { socket } = options;
-      const prefix = legacy ? [ `${name}::${method}` ]
-        : [ method, name ];
+      const prefix = legacy
+        ? [`${name}::${method}`]
+        : [method, name];
       const emitArgs = prefix.concat(args);
 
       socket.emit(...emitArgs, (error, result) =>
@@ -15,9 +16,9 @@ module.exports = function (name, options, legacy = false) {
     }
     );
 
-  it(`invalid arguments cause an error`, () =>
+  it('invalid arguments cause an error', () =>
     call('find', 1, {}).catch(e =>
-      assert.equal(e.message, 'Too many arguments for \'find\' method')
+      assert.strictEqual(e.message, 'Too many arguments for \'find\' method')
     )
   );
 
@@ -32,33 +33,33 @@ module.exports = function (name, options, legacy = false) {
   it('.get with error', () =>
     call('get', 'laundry', { error: true })
       .then(() => assert.ok(false, 'Should never get here'))
-      .catch(error => assert.equal(error.message, 'Something for laundry went wrong'))
+      .catch(error => assert.strictEqual(error.message, 'Something for laundry went wrong'))
   );
 
   it('.get with runtime error', () =>
     call('get', 'laundry', { runtimeError: true })
       .then(() => assert.ok(false, 'Should never get here'))
-      .catch(error => assert.equal(error.message, 'thingThatDoesNotExist is not defined'))
+      .catch(error => assert.strictEqual(error.message, 'thingThatDoesNotExist is not defined'))
   );
 
   it('.get with error in hook', () =>
     call('get', 'laundry', { hookError: true })
       .then(() => assert.ok(false, 'Should never get here'))
-      .catch(error => assert.equal(error.message, 'Error from get, before hook'))
+      .catch(error => assert.strictEqual(error.message, 'Error from get, before hook'))
   );
 
-  it(`.create`, () => {
-    let original = {
-      name: `creating`
+  it('.create', () => {
+    const original = {
+      name: 'creating'
     };
 
     return call('create', original, {})
       .then(data => verify.create(original, data));
   });
 
-  it(`.create without parameters`, () => {
-    let original = {
-      name: `creating again`
+  it('.create without parameters', () => {
+    const original = {
+      name: 'creating again'
     };
 
     return call('create', original)
@@ -66,7 +67,7 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.update', () => {
-    let original = {
+    const original = {
       name: 'updating'
     };
 
@@ -76,7 +77,7 @@ module.exports = function (name, options, legacy = false) {
 
   it('.update many', () => {
     const original = {
-      name: `updating`,
+      name: 'updating',
       many: true
     };
 
@@ -85,8 +86,8 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.patch', () => {
-    let original = {
-      name: `patching`
+    const original = {
+      name: 'patching'
     };
 
     return call('patch', 25, original)
@@ -94,8 +95,8 @@ module.exports = function (name, options, legacy = false) {
   });
 
   it('.patch many', () => {
-    let original = {
-      name: `patching`,
+    const original = {
+      name: 'patching',
       many: true
     };
 
