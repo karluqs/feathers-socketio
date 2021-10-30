@@ -1,15 +1,12 @@
-# @feathersjs/socketio
+# @karluqs/feathers-socketio
 
-[![CI](https://github.com/feathersjs/feathers/workflows/CI/badge.svg)](https://github.com/feathersjs/feathers/actions?query=workflow%3ACI)
-[![Dependency Status](https://img.shields.io/david/feathersjs/feathers.svg?style=flat-square&path=packages/socketio)](https://david-dm.org/feathersjs/feathers?path=packages/socketio)
-[![Download Status](https://img.shields.io/npm/dm/@feathersjs/socketio.svg?style=flat-square)](https://www.npmjs.com/package/@feathersjs/socketio)
-
-> The Feathers Socket.io real-time API provider
+> The Feathers Socket.io (v 4.3.1) real-time API provider
 
 ## Installation
 
 ```
-npm install @feathersjs/socketio --save
+npm install @karluqs/feathers-socketio --save
+yarn add @karluqs/feathers-socketio
 ```
 
 ## Documentation
