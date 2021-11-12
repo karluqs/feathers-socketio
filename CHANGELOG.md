@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.12](https://github.com/karluqs/feathers-socketio/compare/v4.5.11...v4.5.12) (2021-11-11)
+
+**Note:** Version bump for packages
+    "@types/socket.io": "^3.0.2",
+    "socket.io": "^4.3.2",
+
+
+
+
+
 ## [4.5.11](https://github.com/feathersjs/feathers/compare/v4.5.10...v4.5.11) (2020-12-05)
 
 **Note:** Version bump only for package @feathersjs/socketio
